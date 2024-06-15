@@ -6,7 +6,7 @@
 /*   By: ggeorgie <ggeorgie@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 18:17:29 by ggeorgie          #+#    #+#             */
-/*   Updated: 2024/02/13 23:08:47 by ggeorgie         ###   ########.fr       */
+/*   Updated: 2024/02/13 23:22:06 by ggeorgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,12 +105,22 @@ char	**cmd_with_quotes(char argv[])
 	cmd[0] = malloc(sizeof(char) * (ft_strchr(&argv[0], ' ') - &argv[0]) + 1);
 	if (!cmd[0])
 		fn_free_ptr(cmd);
+	// fprintf(stderr, "argv[0] = *%s*\n", &argv[0]);
+//	fprintf(stderr, "cmd[0] begins @ *%s* and ends @ *%s*\n", &argv[0], ft_strchr(&argv[0], ' '));
 	ft_strlcpy(cmd[0], &argv[0], ft_strchr(&argv[0], ' ') - &argv[0] + 1);
+	// fprintf(stderr, "cmd[0] = %s\n", cmd[0]);
+//	fprintf(stderr, "argv[0] leftover = *%s*\n", ft_strchr(&argv[0], ' '));
 	leftover = remove_white_spaces(ft_strchr(&argv[0], ' '));
+	// fprintf(stderr, "leftover = *%s*\n", leftover);
+//	fprintf(stderr, "%d\n", ft_strncmp(leftover, "\\\\\"", 3));
+//	if (ft_strchr(&argv[0], '\'') && ft_strncmp(ft_strchr(&argv[0], ' '), " \"\'", 3)) // Old working version.
+//		cmd[1] = *(ft_split(ft_strchr(&argv[0], ' ') + 1, '\''));						// Old working version.
 	if (ft_strchr(leftover, '\'') && ft_strncmp(leftover, "\"\'", 2))
 		cmd[1] = *(ft_split(leftover + 1, '\''));
+//	else if (ft_strchr(leftover, '\"') && ft_strncmp(leftover, "\\\\\"", 3))	// This is not working.
 	else if (ft_strchr(leftover, '\"'))
 		cmd[1] = *(ft_split(leftover + 1, '\"'));
+	// fprintf(stderr, "cmd[1] = *%s*\n", cmd[1]);
 	if (!cmd[1])
 		fn_free_ptr(cmd);
 	return (cmd);

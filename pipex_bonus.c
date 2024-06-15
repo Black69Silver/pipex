@@ -6,14 +6,19 @@
 /*   By: ggeorgie <ggeorgie@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 22:39:25 by ggeorgie          #+#    #+#             */
-/*   Updated: 2024/02/13 21:59:46 by ggeorgie         ###   ########.fr       */
+/*   Updated: 2024/02/13 23:02:51 by ggeorgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+/* # of pipes = argc - 4 (file_name + infile + last cmd + outfile) */
 
 #include "pipex_bonus.h"
 
 /**
  * @brief	Handles the first child process.
+ * @param	char			*argv[] : ptr to each argument passed by the user.
+ * @param	char			*envp[] : pointer to environmental variables.
+ * @param	struct s_pipex	*pipex : a structure holding internal variables.
  * @return	the result of the first command execution. 
  */
 int	first_child(char *argv[], char *envp[], struct s_pipex *pipex,
@@ -36,6 +41,9 @@ int	first_child(char *argv[], char *envp[], struct s_pipex *pipex,
 
 /**
  * @brief	Handles the last child process.
+ * @param	char			*argv[] : ptr to each argument passed by the user.
+ * @param	char			*envp[] : pointer to environmental variables.
+ * @param	struct s_pipex	*pipex : a structure holding internal variables.
  * @return	the result of the last command execution to outfile. 
  */
 int	last_child(char *argv[], char *envp[], struct s_pipex *pipex, int **pipe_fd)
@@ -59,12 +67,15 @@ int	last_child(char *argv[], char *envp[], struct s_pipex *pipex, int **pipe_fd)
 /**
  * @brief	Takes arguments from 'fork_master' function, creates a fork and  
  * 			passes inputs to respective child function, or handles it locally.
+ * @param	char			*argv[] : ptr to each argument passed by the user.
+ * @param	char			*envp[] : pointer to environmental variables.
+ * @param	struct s_pipex	*pipex : a structure holding internal variables.
  * @return	Parent process ID, or
  * 			the output of the respective child function, or
  * 			error message, if forking was unsuccessful. 
  */
 int	fork_parent(char *argv[], char *envp[], struct s_pipex *pipex,
-			int **pipe_fd)
+				int **pipe_fd)
 {
 	(*pipex).parent_pid = fork();
 	if ((*pipex).parent_pid == -1)
@@ -96,7 +107,7 @@ int	fork_parent(char *argv[], char *envp[], struct s_pipex *pipex,
  * @return	Parent process ID. 
  */
 int	fork_master(char *argv[], char *envp[], struct s_pipex *pipex,
-			int **pipe_fd)
+				int **pipe_fd)
 {
 	while ((*pipex).fork_counter + 2 < (*pipex).arg_counter - 2)
 	{
@@ -108,10 +119,10 @@ int	fork_master(char *argv[], char *envp[], struct s_pipex *pipex,
 
 /**
  * @brief	Replicates the behaviour of "< file1 cmd1 | cmd2 | cmd... > file2"
- * 							when run from the command line.
- * @param	int				argc : number of arguments passed by the user.
- * @param	char			*argv[] : ptr to each argument passed by the user.
- * @param	char			*envp[] : pointer to environmental variables.
+ * 			when run from the command line.
+ * @param	int		argc : number of arguments passed by the user.
+ * @param	char	*argv[] : pointer to each argument passed by the user.
+ * @param	char	*envp[] : pointer to environmental variables.
  * @param	struct s_pipex	*pipex : a structure holding internal variables.
  * @param	int				**pipe_fd : ptr to array of pipes file descriptors.
  * @param	int				ppid : parent process ID.
@@ -120,7 +131,7 @@ int	fork_master(char *argv[], char *envp[], struct s_pipex *pipex,
  * 							returns the exit status of the child.
  * @param	WIFSIGNALED WTERMSIG : if the child process was terminated by a
  * 			signal, returns the number of the signal that caused termination.
- * @return	Saves in file2 the output of operations performed by the commands. 
+ * @return	Saves in file2 the output of opearations performed by the commands. 
  */
 int	main(int argc, char *argv[], char *envp[])
 {

@@ -6,7 +6,7 @@
 /*   By: ggeorgie <ggeorgie@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 18:17:29 by ggeorgie          #+#    #+#             */
-/*   Updated: 2024/02/13 22:25:33 by ggeorgie         ###   ########.fr       */
+/*   Updated: 2024/02/13 23:07:59 by ggeorgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,11 @@ char	**cmd_with_quotes(char argv[])
 		cmd[1] = *(ft_split(leftover + 1, '\''));
 	else if (ft_strchr(leftover, '\"'))
 		cmd[1] = *(ft_split(leftover + 1, '\"'));
+	// if (ft_strchr(&argv[0], '\'')
+	// 	&& ft_strncmp(ft_strchr(&argv[0], ' '), " \"\'", 3))
+	// 	cmd[1] = *(ft_split(ft_strchr(&argv[0], ' ') + 1, '\''));
+	// else if (ft_strchr(&argv[0], '\"'))
+	// 	cmd[1] = *(ft_split(ft_strchr(&argv[0], ' ') + 1, '\"'));
 	if (!cmd[1])
 		fn_free_ptr(cmd);
 	cmd[2] = NULL;

@@ -6,7 +6,7 @@
 /*   By: ggeorgie <ggeorgie@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 22:30:21 by ggeorgie          #+#    #+#             */
-/*   Updated: 2024/02/13 23:17:42 by ggeorgie         ###   ########.fr       */
+/*   Updated: 2024/02/13 23:23:31 by ggeorgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 /**
  * @brief	Counts the number of characters in 'str' string.
+ * @param	char	*str : a string.
  * @return	The number of characters in 'str'.
  */
 size_t	ft_strlen(const char *str)

@@ -6,7 +6,7 @@
 /*   By: ggeorgie <ggeorgie@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 15:44:21 by ggeorgie          #+#    #+#             */
-/*   Updated: 2024/02/11 18:20:04 by ggeorgie         ###   ########.fr       */
+/*   Updated: 2024/03/25 02:34:56 by ggeorgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,37 @@ char	**ft_split(char const *s, char c)
 	if (pointers != NULL)
 		pointers = fill_pointers(str, int_var, pointers);
 	else
-		fn_free(*pointers);
+		fn_free_ptr(pointers);
+//		fn_free(*pointers);
 	fn_free(str);
 	return (pointers);
+}
+
+int	main(void)
+{
+//	char const	*s = "      split       this for   me  !       ";
+//	char		c = ' ';
+	char const	*s = "1c34ccc990";
+	char		c = 'c';
+	char	**pointers;
+
+	printf("\nInput: %s\n", s);
+	pointers = ft_split(s, c);
+	printf("Output (pointer_to_pointers): %p\n\n", pointers);
+	fn_free_ptr(pointers);
+/*
+	char		**split;
+
+	split = ft_split(s, c);
+	if (split == NULL)
+	{
+		printf("split returns NULL");
+		return (-1);
+	}
+	while (*split != NULL)
+	{
+		printf("%s\n", *split);
+		split++;
+	}
+*/	return (0);
 }

@@ -6,9 +6,38 @@
 /*   By: ggeorgie <ggeorgie@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 22:39:25 by ggeorgie          #+#    #+#             */
-/*   Updated: 2024/02/13 23:05:38 by ggeorgie         ###   ########.fr       */
+/*   Updated: 2024/02/16 16:56:27 by ggeorgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+/* './pipex file1 cmd1 cmd2 file2' should replicate the behaviour of
+ * '< file1 cmd1 | cmd2 > file2' shell command
+'< file1':	Input Redirection:	Redirects the standard input (stdin) of 'cmd1'
+								command to come from the contents of 'file1'.
+'cmd1':		Command 1:			This is the first command in the pipeline. 
+								It processes the input received from 'file1'.
+'|':		Pipe:				Connects the standard output (stdout) of 'cmd1'
+								to the standard input (stdin) of 'cmd2'. 
+'cmd2':		Command 2:			This is the second command in the pipeline. 
+								It processes the input received from 'cmd1'.
+'> file2':	Output Redirection:	It redirects the standard output (stdout) of
+								'cmd2' to go to 'file2'.
+
+Links to the manual pages of the functions used in the project:
+<https://www.ibm.com/docs/en/i/7.5?topic=functions-main-function>
+<https://manpages.ubuntu.com/manpages/mantic/en/man2/access.2.html>
+<https://manpages.ubuntu.com/manpages/noble/en/man2/dup2.2.html>
+<https://manpages.ubuntu.com/manpages/mantic/en/man2/execve.2.html>
+<https://manpages.ubuntu.com/manpages/mantic/en/man1/exit.1posix.html>
+<https://manpages.ubuntu.com/manpages/mantic/en/man2/pipe.2.html>
+<https://manpages.ubuntu.com/manpages/mantic/en/man2/waitpid.2.html>
+
+Useful links for progressing in the project:
+ * <https://csnotes.medium.com/pipex-tutorial-42-project-4469f5dd5901>
+ * <https://www.rozmichelle.com/pipes-forks-dups/>
+ * <https://www.codequoi.com/en/creating-and-killing-child-processes-in-c/>
+ * <https://www.codequoi.com/en/handling-a-file-by-its-descriptor-in-c/>
+ */
 
 #include "pipex.h"
 
@@ -24,7 +53,7 @@ void	exit_pipe(void)
  */
 int	first_child(char *argv[], char *envp[], struct s_pipex *pipex)
 {
-	(*pipex).input_fd = open(argv[1], O_RDONLY);
+	(*pipex).input_fd = open(argv[1], O_RDONLY);								// same as 'pipex->input_fd = open(argv[1], O_RDONLY);'
 	if ((*pipex).input_fd == -1)
 	{
 		write(2, ERR_INFILE, ft_strlen(ERR_INFILE));
@@ -32,11 +61,11 @@ int	first_child(char *argv[], char *envp[], struct s_pipex *pipex)
 	}
 	if (dup2((*pipex).input_fd, STDIN_FILENO) == -1)
 		exit_pipe();
-	close((*pipex).input_fd);
+	close((*pipex).input_fd);													// according to valgrind --track-fds=yes, not necessary, but kept as it is a good practice.
 	if (dup2((*pipex).pipe_fd[1], STDOUT_FILENO) == -1)
 		exit_pipe();
-	close((*pipex).pipe_fd[0]);
-	close((*pipex).pipe_fd[1]);
+	close((*pipex).pipe_fd[0]);													// Not closing the pipe slows down (times out) the program execution, even if there are no leaks.
+	close((*pipex).pipe_fd[1]);													// Not closing the pipe slows down (times out) the program execution, even if there are no leaks.
 	return (execute_function(argv[2], envp));
 }
 
@@ -55,11 +84,11 @@ int	last_child(int argc, char *argv[], char *envp[], struct s_pipex *pipex)
 	}
 	if (dup2((*pipex).output_fd, STDOUT_FILENO) == -1)
 		exit_pipe();
-	close((*pipex).output_fd);
+	close((*pipex).output_fd);													// according to valgrind --track-fds=yes, not necessary, but kept as it is a good practice.
 	if (dup2((*pipex).pipe_fd[0], STDIN_FILENO) == -1)
 		exit_pipe();
-	close((*pipex).pipe_fd[0]);
-	close((*pipex).pipe_fd[1]);
+	close((*pipex).pipe_fd[0]);													// Not closing the pipe slows down (times out) the program execution, even if there are no leaks.
+	close((*pipex).pipe_fd[1]);													// Not closing the pipe slows down (times out) the program execution, even if there are no leaks.
 	return (execute_function(argv[argc - 2], envp));
 }
 
@@ -90,7 +119,7 @@ int	fork_parent(int argc, char *argv[], char *envp[], struct s_pipex *pipex)
  * @brief	Replicates the behaviour of "< file1 cmd1 | cmd2 > file2"
  * 			when run from the command line.
  * @param	int				argc : number of arguments passed by the user.
- * @param	char			*argv[] : ptr to each argument passed by the user.
+ * @param	char			*argv[] : pointer to each argument passed by the user.
  * @param	char			*envp[] : pointer to environmental variables.
  * @param	struct s_pipex	*pipex : a structure holding internal variables.
  * @param	int				ppid : parent process ID.
@@ -127,5 +156,5 @@ int	main(int argc, char *argv[], char *envp[])
 		exit (WEXITSTATUS(wstatus));
 	if (WIFSIGNALED(wstatus))
 		exit (WTERMSIG(wstatus));
-	return (EXIT_SUCCESS);
+	 return (EXIT_SUCCESS);
 }

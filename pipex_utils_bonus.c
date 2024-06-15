@@ -6,7 +6,7 @@
 /*   By: ggeorgie <ggeorgie@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 22:30:21 by ggeorgie          #+#    #+#             */
-/*   Updated: 2024/02/13 23:15:45 by ggeorgie         ###   ########.fr       */
+/*   Updated: 2024/02/13 23:16:27 by ggeorgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ char	*ft_strjoin(char *s1, char *s2)
 		}
 		str[ft_strlen(s1) + ft_strlen(s2)] = '\0';
 	}
-	fn_free(s1);
+	fn_free(s1);																// Why does this does not throw an error?
+//	fn_free(s2);																// Why does this throw an error?
 	return (str);
 }
 
